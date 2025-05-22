@@ -256,34 +256,38 @@ async def send_digiato_updates(context: ContextTypes.DEFAULT_TYPE):
 
 # === Periodic Job: Send Persian Historical Tech Events with Image ===
 async def send_calendar(context: ContextTypes.DEFAULT_TYPE):
-    print("Sending calendar update")
+    print("send_calendar")
     timezone = pytz.timezone("Asia/Tehran")
     greg_today = datetime.datetime.now(timezone).date()
-    weekday = greg_today.weekday()
+    print(greg_today)
+    weekday = greg_today.weekday()  # 0=Monday, ..., 5=Saturday, 6=Sunday
+    print(weekday)
     today = jdatetime.date.fromgregorian(date=greg_today)
-
-    day_image_index = (weekday + 2) % len(day_images)
+    print(today)
+    
+    # Map weekday to day_images index: sat.png=0, sun.png=1, mon.png=2, ...
+    day_image_index = (weekday + 2) % len(day_images)  # Adjusts for list starting at Saturday
     day_image = day_images[day_image_index]
-    day_image_path = os.path.abspath(day_image)
-
+    print(day_image)
+    
     try:
-        prompt = f"..."
+        prompt = f"""سه رویداد مهم تاریخی در زمینه فناوری که در تاریخ میلادی {greg_today.strftime('%m-%d')} در سال‌های گذشته اتفاق افتاده‌اند را به صورت سه جمله کوتاه و مجزا بنویس. لطفاً فقط رویدادهای فناوری را ذکر کن و از موضوعات سیاسی یا مذهبی پرهیز کن. خروجی را فقط به زبان فارسی بنویس."""
         response = client.chat.completions.create(
             model="gpt-4",
-            messages=[{"role": "user", "content": prompt}],
-            timeout=60
+            messages=[{"role": "user", "content": prompt}]
         )
         events = response.choices[0].message.content.strip()
     except Exception as e:
-        print(f"[OpenAI Error] {str(e)}")
+        print(f"Error fetching events: {e}")
         events = "❗️رویدادی یافت نشد."
-    caption = f"\U0001F4C5 امروز {today} (معادل {greg_today})\n\U0001F4D6 مناسبت‌ها:\n{events}"
+
     try:
-        with open(day_image_path, "rb") as img:
+        with open(os.path.abspath(day_image), 'rb') as img:
+            caption = f"\U0001F4C5 امروز {today} (معادل {greg_today})\n\U0001F4D6 مناسبت‌ها:\n{events}"
             await context.bot.send_photo(chat_id=GROUP_ID, photo=img, caption=caption)
-            print("Sent calendar to Telegram")
     except Exception as e:
-        pass
+        print(f"Error sending photo: {e}")
+
 
 # === Bot Start Command Handler ===
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
