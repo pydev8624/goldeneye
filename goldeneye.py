@@ -45,7 +45,13 @@ vectorizer = TfidfVectorizer()  # TF-IDF vectorizer
 tfidf_matrix = None  # Matrix for similarity matching
 
 # === List of Inappropriate Words (Farsi & English) ===
-BAD_WORDS = set([...])  # Removed for brevity in comment
+BAD_WORDS = set([
+    'لعنتی', 'کثافت', 'مادر', 'پدر', 'حروم', 'احمق', 'نفهم', 'بی ناموس','کاندوم',
+    'کونی', 'جنده', 'زنا', 'تجاوز', 'ننگ', 'فحشا', 'سقط', 'حرامزاده',
+    'مرگ بر', 'لعنت بر',
+    'خامنه ای', 'خمینی', 'سپاه', 'پاسدار', 'رئیس جمهور', 'داعش', 'طالبان', 'منافق', 'تروریست',
+    'fuck', 'shit', 'bastard', 'slut', 'whore', 'asshole', 'bitch', 'damn', 'suck', 'dick', 'piss'
+])  # Removed for brevity in comment
 
 # === Weekly Calendar Image Filenames ===
 day_images = ["sat.png", "sun.png", "mon.png", "tue.png", "wed.png", "thur.png", "fri.png"]
