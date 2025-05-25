@@ -211,7 +211,7 @@ def summarize_article(url):
     print("summarize_article")
     try:
         keywords = extract_keywords_from_url(url)
-        prompt = f"""..."""  # Prompt content as-is
+        prompt = f"""explain and give useful information about {url} in short medium text in persian """  # Prompt content as-is
         response = client.chat.completions.create(
             model="gpt-4",
             messages=[{"role": "user", "content": prompt}],
@@ -325,7 +325,12 @@ def main():
 
     # Start bot polling loop
     app.run_polling()
-
+import subprocess
 # === Entry Point ===
 if __name__ == "__main__":
-    main()
+    try:
+        subprocess.run(['sudo', 'timedatectl', 'set-timezone', 'Asia/Tehran'], check=True)
+        print("Timezone changed to Asia/Tehran successfully.")
+        main()
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to change timezone: {e}")
