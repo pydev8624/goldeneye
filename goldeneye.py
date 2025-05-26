@@ -222,7 +222,7 @@ def summarize_article(url):
         telegram_summary = f"{summary}\n{url}"
         return telegram_summary
     except Exception as e:
-        return "", ""
+        return ""
 
 # === Load Already Sent Digiato Links from File ===
 def load_digiato_sent_links():
@@ -246,7 +246,7 @@ async def send_digiato_updates(context: ContextTypes.DEFAULT_TYPE):
     for link in new_links:
         telegram_summary = ""
         try:
-            telegram_summary, _ = summarize_article(link)
+            telegram_summary = summarize_article(link)
         except Exception as e:
             pass 
         try:
